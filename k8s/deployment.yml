@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guest
+  template:
+    metadata:
+      labels:
+        app: guest
+    spec:
+      containers:
+      - name: guest
+        image: ghcr.io/c-4u/guest
+        ports:
+        - name: rest
+          containerPort: 8080
+        envFrom:
+          - secretRef:
+              name: guest-secret
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+
+      imagePullSecrets:
+          - name: regsecret
