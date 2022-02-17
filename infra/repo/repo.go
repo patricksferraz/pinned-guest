@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/c-4u/guest/domain/entity"
-	"github.com/c-4u/guest/infra/client/kafka"
-	"github.com/c-4u/guest/infra/db"
+	"github.com/c-4u/pinned-guest/domain/entity"
+	"github.com/c-4u/pinned-guest/infra/client/kafka"
+	"github.com/c-4u/pinned-guest/infra/db"
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 )
 

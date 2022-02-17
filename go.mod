@@ -1,4 +1,4 @@
-module github.com/c-4u/guest
+module github.com/c-4u/pinned-guest
 
 go 1.17
 
