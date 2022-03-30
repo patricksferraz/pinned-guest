@@ -24,7 +24,6 @@ type Guest struct {
 }
 
 func NewGuest(name, doc *string) (*Guest, error) {
-	utils.OnlyDigits(doc)
 	e := Guest{
 		Name: name,
 		Doc:  doc,
