@@ -58,6 +58,7 @@ require (
 	github.com/lib/pq v1.10.4
 	github.com/paemuri/brdoc v1.1.2
 	github.com/swaggo/fiber-swagger v1.2.0
+	go.mongodb.org/mongo-driver v1.8.4
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/driver/sqlite v1.2.6

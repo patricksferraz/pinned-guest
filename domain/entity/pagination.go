@@ -1,8 +1,6 @@
 package entity
 
 import (
-	"time"
-
 	"github.com/asaskevich/govalidator"
 	"github.com/c-4u/pinned-guest/utils"
 	"github.com/paemuri/brdoc"
@@ -17,23 +15,18 @@ func init() {
 }
 
 type Pagination struct {
-	Last     *time.Time `json:"last" valid:"-"`
-	PageSize *int       `json:"page_size" valid:"-"`
+	PageToken *string `json:"page_token" valid:"-"`
+	PageSize  *int    `json:"page_size" valid:"-"`
 }
 
-func NewPagination(last, pageSize *int) (*Pagination, error) {
-	var _last time.Time
-
+func NewPagination(pageToken *string, pageSize *int) (*Pagination, error) {
 	if pageSize == nil {
 		pageSize = utils.PInt(10)
 	}
 
-	if *last != 0 {
-		_last = time.UnixMicro(int64(*last))
-	}
 	e := Pagination{
-		Last:     &_last,
-		PageSize: pageSize,
+		PageToken: pageToken,
+		PageSize:  pageSize,
 	}
 
 	err := e.IsValid()

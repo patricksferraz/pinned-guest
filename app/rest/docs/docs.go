@@ -50,9 +50,9 @@ var doc = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "last",
-                        "name": "last",
+                        "type": "string",
+                        "description": "page token",
+                        "name": "page_token",
                         "in": "query"
                     }
                 ],
@@ -227,8 +227,8 @@ var doc = `{
                         "$ref": "#/definitions/rest.Guest"
                     }
                 },
-                "last": {
-                    "type": "integer"
+                "next_page_token": {
+                    "type": "string"
                 }
             }
         }

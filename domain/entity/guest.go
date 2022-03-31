@@ -7,6 +7,7 @@ import (
 	"github.com/c-4u/pinned-guest/utils"
 	"github.com/paemuri/brdoc"
 	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func init() {
@@ -18,15 +19,18 @@ func init() {
 }
 
 type Guest struct {
-	Base `json:",inline" valid:"-"`
-	Name *string `json:"name" gorm:"column:name;not null" valid:"required"`
-	Doc  *string `json:"doc" gorm:"column:doc;type:varchar(15)" valid:"doc,optional"`
+	Base  `json:",inline" valid:"-"`
+	Name  *string `json:"name" gorm:"column:name;not null" valid:"required"`
+	Doc   *string `json:"doc" gorm:"column:doc;type:varchar(15);unique" valid:"doc"`
+	Token *string `json:"-" gorm:"column:token;type:varchar(25);not null" valid:"-"`
 }
 
 func NewGuest(name, doc *string) (*Guest, error) {
+	token := primitive.NewObjectID().Hex()
 	e := Guest{
-		Name: name,
-		Doc:  doc,
+		Name:  name,
+		Doc:   doc,
+		Token: &token,
 	}
 	e.ID = utils.PString(uuid.NewV4().String())
 	e.CreatedAt = utils.PTime(time.Now())
@@ -50,7 +54,7 @@ type SearchGuests struct {
 
 func NewSearchGuests(pagination *Pagination) (*SearchGuests, error) {
 	e := SearchGuests{}
-	e.Last = pagination.Last
+	e.PageToken = pagination.PageToken
 	e.PageSize = pagination.PageSize
 
 	err := e.IsValid()

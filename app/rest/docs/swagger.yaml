@@ -37,8 +37,8 @@ definitions:
         items:
           $ref: '#/definitions/rest.Guest'
         type: array
-      last:
-        type: integer
+      next_page_token:
+        type: string
     type: object
 info:
   contact:
@@ -60,10 +60,10 @@ paths:
         in: query
         name: page_size
         type: integer
-      - description: last
+      - description: page token
         in: query
-        name: last
-        type: integer
+        name: page_token
+        type: string
       produces:
       - application/json
       responses:

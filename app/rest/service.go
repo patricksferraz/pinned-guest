@@ -79,7 +79,7 @@ func (t *RestService) FindGuest(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param page_size query int false "page size"
-// @Param last query int false "last"
+// @Param page_token query string false "page token"
 // @Success 200 {object} SearchGuestResponse
 // @Failure 400 {object} HTTPResponse
 // @Failure 403 {object} HTTPResponse
@@ -91,13 +91,13 @@ func (t *RestService) SearchGuests(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(HTTPResponse{Msg: err.Error()})
 	}
 
-	guests, last, err := t.Service.SearchGuests(c.Context(), &req.Last, &req.PageSize)
+	guests, nextPageToken, err := t.Service.SearchGuests(c.Context(), &req.PageToken, &req.PageSize)
 	if err != nil {
 		return c.Status(fiber.StatusForbidden).JSON(HTTPResponse{Msg: err.Error()})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"guests": guests,
-		"last":   last.UnixMicro(),
+		"guests":          guests,
+		"next_page_token": nextPageToken,
 	})
 }

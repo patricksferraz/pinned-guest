@@ -28,11 +28,11 @@ type Guest struct {
 }
 
 type SearchGuestRequest struct {
-	Last     int `json:"last" query:"last"`
-	PageSize int `json:"page_size" query:"page_size"`
+	PageToken string `json:"page_token" query:"page_token"`
+	PageSize  int    `json:"page_size" query:"page_size"`
 }
 
 type SearchGuestResponse struct {
-	Guests []*Guest `json:"guests"`
-	Last   int      `json:"last"`
+	Guests        []*Guest `json:"guests"`
+	NextPageToken string   `json:"next_page_token"`
 }

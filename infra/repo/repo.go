@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/c-4u/pinned-guest/domain/entity"
 	"github.com/c-4u/pinned-guest/infra/client/kafka"
@@ -45,21 +44,25 @@ func (r *Repository) SaveGuest(ctx context.Context, guest *entity.Guest) error {
 	return err
 }
 
-func (r *Repository) SearchGuests(ctx context.Context, searchGuest *entity.SearchGuests) ([]*entity.Guest, *time.Time, error) {
+func (r *Repository) SearchGuests(ctx context.Context, searchGuest *entity.SearchGuests) ([]*entity.Guest, *string, error) {
 	var e []*entity.Guest
 
 	q := r.Orm.Db
-	if !searchGuest.Last.IsZero() {
-		q = q.Where("created_at < ?", *searchGuest.Last)
+	if *searchGuest.PageToken != "" {
+		q = q.Where("token < ?", *searchGuest.PageToken)
 	}
-	err := q.Order("created_at DESC").
+	err := q.Order("token DESC").
 		Limit(*searchGuest.PageSize).
 		Find(&e).Error
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return e, e[len(e)-1].CreatedAt, nil
+	if len(e) == 0 {
+		return nil, nil, nil
+	}
+
+	return e, e[len(e)-1].Token, nil
 }
 
 func (r *Repository) PublishEvent(ctx context.Context, topic, msg, key *string) error {

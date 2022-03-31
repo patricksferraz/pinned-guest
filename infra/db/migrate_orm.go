@@ -34,8 +34,9 @@ func (m *MigrateOrm) load() {
 				}
 				type Guest struct {
 					Base
-					Name *string `gorm:"column:name;not null"`
-					Doc  *string `gorm:"column:doc;type:varchar(15)"`
+					Name  *string `gorm:"column:name;not null"`
+					Doc   *string `gorm:"column:doc;type:varchar(15);unique"`
+					Token *string `gorm:"column:token;type:varchar(25);not null"`
 				}
 
 				return db.AutoMigrate(&Guest{})
