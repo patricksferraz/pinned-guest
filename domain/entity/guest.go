@@ -43,3 +43,20 @@ func (e *Guest) IsValid() error {
 	_, err := govalidator.ValidateStruct(e)
 	return err
 }
+
+type SearchGuests struct {
+	Pagination `json:",inline" valid:"-"`
+}
+
+func NewSearchGuests(pagination *Pagination) (*SearchGuests, error) {
+	e := SearchGuests{}
+	e.Last = pagination.Last
+	e.PageSize = pagination.PageSize
+
+	err := e.IsValid()
+	if err != nil {
+		return nil, err
+	}
+
+	return &e, nil
+}

@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/c-4u/pinned-guest/domain/entity"
 	"github.com/c-4u/pinned-guest/infra/client/kafka"
@@ -11,26 +12,26 @@ import (
 )
 
 type Repository struct {
-	Pg *db.PostgreSQL
-	Kp *kafka.KafkaProducer
+	Orm *db.DbOrm
+	Kp  *kafka.KafkaProducer
 }
 
-func NewRepository(pg *db.PostgreSQL, kp *kafka.KafkaProducer) *Repository {
+func NewRepository(orm *db.DbOrm, kp *kafka.KafkaProducer) *Repository {
 	return &Repository{
-		Pg: pg,
-		Kp: kp,
+		Orm: orm,
+		Kp:  kp,
 	}
 }
 
 func (r *Repository) CreateGuest(ctx context.Context, guest *entity.Guest) error {
-	err := r.Pg.Db.Create(guest).Error
+	err := r.Orm.Db.Create(guest).Error
 	return err
 }
 
 func (r *Repository) FindGuest(ctx context.Context, guestID *string) (*entity.Guest, error) {
 	var e entity.Guest
 
-	r.Pg.Db.First(&e, "id = ?", *guestID)
+	r.Orm.Db.First(&e, "id = ?", *guestID)
 
 	if e.ID == nil {
 		return nil, fmt.Errorf("no guest found")
@@ -40,8 +41,25 @@ func (r *Repository) FindGuest(ctx context.Context, guestID *string) (*entity.Gu
 }
 
 func (r *Repository) SaveGuest(ctx context.Context, guest *entity.Guest) error {
-	err := r.Pg.Db.Save(guest).Error
+	err := r.Orm.Db.Save(guest).Error
 	return err
+}
+
+func (r *Repository) SearchGuests(ctx context.Context, searchGuest *entity.SearchGuests) ([]*entity.Guest, *time.Time, error) {
+	var e []*entity.Guest
+
+	q := r.Orm.Db
+	if !searchGuest.Last.IsZero() {
+		q = q.Where("created_at < ?", *searchGuest.Last)
+	}
+	err := q.Order("created_at DESC").
+		Limit(*searchGuest.PageSize).
+		Find(&e).Error
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return e, e[len(e)-1].CreatedAt, nil
 }
 
 func (r *Repository) PublishEvent(ctx context.Context, topic, msg, key *string) error {

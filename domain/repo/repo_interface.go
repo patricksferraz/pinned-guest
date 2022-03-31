@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/c-4u/pinned-guest/domain/entity"
 )
@@ -10,6 +11,7 @@ type RepoInterface interface {
 	CreateGuest(ctx context.Context, guest *entity.Guest) error
 	FindGuest(ctx context.Context, guestID *string) (*entity.Guest, error)
 	SaveGuest(ctx context.Context, guest *entity.Guest) error
+	SearchGuests(ctx context.Context, searchGuest *entity.SearchGuests) ([]*entity.Guest, *time.Time, error)
 
 	PublishEvent(ctx context.Context, topic, msg, key *string) error
 }

@@ -29,6 +29,54 @@ var doc = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/guests": {
+            "get": {
+                "description": "Router for search guests",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "search guests",
+                "operationId": "searchGuests",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page size",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "last",
+                        "name": "last",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.SearchGuestResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/rest.HTTPResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/rest.HTTPResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Router for create a new guest",
                 "consumes": [
@@ -167,6 +215,20 @@ var doc = `{
             "properties": {
                 "id": {
                     "type": "string"
+                }
+            }
+        },
+        "rest.SearchGuestResponse": {
+            "type": "object",
+            "properties": {
+                "guests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rest.Guest"
+                    }
+                },
+                "last": {
+                    "type": "integer"
                 }
             }
         }

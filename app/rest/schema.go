@@ -26,3 +26,13 @@ type Guest struct {
 	Name string `json:"name"`
 	Doc  string `json:"doc"`
 }
+
+type SearchGuestRequest struct {
+	Last     int `json:"last" query:"last"`
+	PageSize int `json:"page_size" query:"page_size"`
+}
+
+type SearchGuestResponse struct {
+	Guests []*Guest `json:"guests"`
+	Last   int      `json:"last"`
+}

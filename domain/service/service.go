@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/c-4u/pinned-guest/domain/entity"
 	"github.com/c-4u/pinned-guest/domain/repo"
@@ -55,4 +56,23 @@ func (s *Service) FindGuest(ctx context.Context, guestID *string) (*entity.Guest
 	}
 
 	return guest, nil
+}
+
+func (s *Service) SearchGuests(ctx context.Context, createdAt, pageSize *int) ([]*entity.Guest, *time.Time, error) {
+	pagination, err := entity.NewPagination(createdAt, pageSize)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	searchGuests, err := entity.NewSearchGuests(pagination)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	guests, next, err := s.Repo.SearchGuests(ctx, searchGuests)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return guests, next, nil
 }

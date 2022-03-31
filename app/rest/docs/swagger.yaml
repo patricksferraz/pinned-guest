@@ -31,6 +31,15 @@ definitions:
       id:
         type: string
     type: object
+  rest.SearchGuestResponse:
+    properties:
+      guests:
+        items:
+          $ref: '#/definitions/rest.Guest'
+        type: array
+      last:
+        type: integer
+    type: object
 info:
   contact:
     email: contato@coding4u.com.br
@@ -41,6 +50,38 @@ info:
   version: "1.0"
 paths:
   /guests:
+    get:
+      consumes:
+      - application/json
+      description: Router for search guests
+      operationId: searchGuests
+      parameters:
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: last
+        in: query
+        name: last
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SearchGuestResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.HTTPResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/rest.HTTPResponse'
+      summary: search guests
+      tags:
+      - Guest
     post:
       consumes:
       - application/json

@@ -70,3 +70,34 @@ func (t *RestService) FindGuest(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(guest)
 }
+
+// SearchGuests godoc
+// @Summary search guests
+// @ID searchGuests
+// @Tags Guest
+// @Description Router for search guests
+// @Accept json
+// @Produce json
+// @Param page_size query int false "page size"
+// @Param last query int false "last"
+// @Success 200 {object} SearchGuestResponse
+// @Failure 400 {object} HTTPResponse
+// @Failure 403 {object} HTTPResponse
+// @Router /guests [get]
+func (t *RestService) SearchGuests(c *fiber.Ctx) error {
+	var req SearchGuestRequest
+
+	if err := c.QueryParser(&req); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(HTTPResponse{Msg: err.Error()})
+	}
+
+	guests, last, err := t.Service.SearchGuests(c.Context(), &req.Last, &req.PageSize)
+	if err != nil {
+		return c.Status(fiber.StatusForbidden).JSON(HTTPResponse{Msg: err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"guests": guests,
+		"last":   last.UnixMicro(),
+	})
+}
