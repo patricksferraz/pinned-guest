@@ -58,8 +58,8 @@ func (r *Repository) SearchGuests(ctx context.Context, searchGuest *entity.Searc
 		return nil, nil, err
 	}
 
-	if len(e) == 0 {
-		return nil, nil, nil
+	if len(e) < *searchGuest.PageSize {
+		return e, nil, nil
 	}
 
 	return e, e[len(e)-1].Token, nil
