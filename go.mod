@@ -1,4 +1,4 @@
-module github.com/c-4u/pinned-guest
+module github.com/patricksferraz/pinned-guest
 
 go 1.18
 

@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/c-4u/pinned-guest/utils"
 	"github.com/paemuri/brdoc"
+	"github.com/patricksferraz/pinned-guest/utils"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
